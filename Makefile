@@ -1,3 +1,5 @@
+all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play mkpasswd_deb_cross
+	echo "Fertig"
 
 clean:
 	rm -rf  w48rebootd
@@ -11,9 +13,6 @@ clean:
 	rm -rf  w48play
 	rm -rf  mkpasswd
 	rm -rf  wiringpi
-
-all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play mkpasswd_deb_cross
-	echo "Fertig"
 
 
 ##################################### cross
