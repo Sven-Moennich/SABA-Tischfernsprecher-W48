@@ -1,15 +1,3 @@
-init:
-	git clone https://github.com/Sven-Moennich/w48rebootd.git
-	git clone https://github.com/Sven-Moennich/w48-WebGUI.git
-	git clone https://github.com/Sven-Moennich/w48phpcmd.git
-	git clone https://github.com/Sven-Moennich/w48-image-builder.git
-	git clone https://github.com/Sven-Moennich/w48d.git
-	git clone https://github.com/Sven-Moennich/libupnp.git
-	git clone https://github.com/Sven-Moennich/w48upnpd.git
-	git clone https://github.com/Sven-Moennich/mkversion.git
-	git clone https://github.com/Sven-Moennich/w48play.git
-	git clone https://github.com/Sven-Moennich/mkpasswd.git
-
 
 clean:
 	rm -rf  w48rebootd
@@ -22,3 +10,82 @@ clean:
 	rm -rf  mkversion
 	rm -rf  w48play
 	rm -rf  mkpasswd
+	rm -rf  wiringpi
+
+all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play mkpasswd_deb_cross
+	echo "Fertig"
+
+
+##################################### cross
+cross:
+	make.sh
+
+##################################### w48play
+w48play: 
+	git clone https://github.com/Sven-Moennich/w48play.git
+
+##################################### w48upnpd
+w48upnpd:
+	git clone https://github.com/Sven-Moennich/w48upnpd.git
+
+
+##################################### w48rebootd
+w48rebootd:
+	git clone https://github.com/Sven-Moennich/w48rebootd.git
+
+##################################### w48phpcmd
+w48phpcmd:
+	git clone https://github.com/Sven-Moennich/w48phpcmd.git
+
+##################################### libupnp
+libupnp:
+	git clone https://github.com/Sven-Moennich/libupnp.git
+
+##################################### wiringpi
+wiringpi:
+	git clone https://github.com/Sven-Moennich/wiringpi.git
+
+
+##################################### w48d
+w48d:
+	git clone https://github.com/Sven-Moennich/w48d.git
+
+
+###################################### w48-image-builder
+w48-image-builder:
+	git clone https://github.com/Sven-Moennich/w48-image-builder.git
+
+
+####################################### w48-WebGUI
+w48-WebGUI: 
+	git clone https://github.com/Sven-Moennich/w48-WebGUI.git
+
+w48-WebGUI_deb: w48-WebGUI
+	cd w48-WebGUI && ./mkdeb.sh && cp *.deb ../w48-image-builder/src/usr/src/
+
+######################################## mkversion
+mkversion:
+	git clone https://github.com/Sven-Moennich/mkversion.git
+
+mkversion_bin: mkversion
+	cd mkversion && make && make install
+
+mkversion_deb: mkversion_bin
+	cd mkversion && ./mkdeb.sh
+
+######################################### mkpasswd
+
+mkpasswd:
+	git clone https://github.com/Sven-Moennich/mkpasswd.git
+
+mkpasswd_bin: mkpasswd
+	cd mkpasswd && make && make install
+
+mkpasswd_bin_cross: cross mkpasswd
+	cd mkpasswd && make cross
+
+mkpasswd_deb: mkpasswd_bin
+	cd mkpasswd && ./mkdeb.sh
+
+mkpasswd_deb_cross: mkpasswd_bin_cross
+	cd mkpasswd && ./mkdeb.sh
