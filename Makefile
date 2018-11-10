@@ -1,8 +1,12 @@
 all:
-	echo "Nichts zu tun"
+	echo "run make build-all || make all-rpi"
 
-build-all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play w48conf_deb
+build-all: w48-image-builder w48-WebGUI mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play w48conf_deb
 	echo "Fertig"
+
+all-rpi: w48-image-builder mkpasswd_deb w48d_deb w48phpcmd_deb w48rebootd_deb w48upnpd_deb w48play_deb w48conf_deb
+	echo "Fertig"
+
 
 clean:
 	rm -rf  w48rebootd
@@ -18,57 +22,126 @@ clean:
 	rm -rf  wiringpi
 	rm -rf  gcc_all
 	rm -rf  w48conf
+	rm -f *.deb
 
 
 ##################################### cross
 cross:
 	./make.sh
 
+
+
+#######################################################################
 ##################################### w48conf
 w48conf: 
 	git clone https://github.com/Sven-Moennich/w48conf.git
 
+##################################### w48conf_bin
+w48conf_bin: w48conf
+	cd w48conf && make
+
 ##################################### w48conf_deb
-w48conf_deb: w48conf
+w48conf_deb: w48conf_bin
 	cd w48conf && ./mkdeb.sh
 
 
+
+
+#####################################################################
 ##################################### w48play
 w48play: 
 	git clone https://github.com/Sven-Moennich/w48play.git
 
+##################################### w48play_bin
+w48play_bin: w48play
+	cd w48play && make
+
+##################################### w48play_deb
+w48play_deb: w48play_bin
+	cd w48play && ./mkdeb.sh
+
+
+
+########################################################################
 ##################################### w48upnpd
 w48upnpd:
 	git clone https://github.com/Sven-Moennich/w48upnpd.git
 
 
+##################################### w48upnpd_bin
+w48upnpd_bin: w48upnpd libupnp_bin 
+	cd w48upnpd && make
+
+##################################### w48upnpd_deb
+w48upnpd_deb: w48upnpd_bin
+	cd w48upnpd && ./mkdeb.sh
+
+
+###########################################################################
 ##################################### w48rebootd
 w48rebootd:
 	git clone https://github.com/Sven-Moennich/w48rebootd.git
 
+##################################### w48rebootd_bin
+w48rebootd_bin: w48rebootd
+	cd w48rebootd && make
+
+##################################### w48rebootd_deb
+w48rebootd_deb: w48rebootd_bin
+	cd w48rebootd && ./mkdeb.sh
+
+
+###########################################################################
 ##################################### w48phpcmd
 w48phpcmd:
 	git clone https://github.com/Sven-Moennich/w48phpcmd.git
 
+##################################### w48phpcmd_bin
+w48phpcmd_bin: w48phpcmd
+	cd w48phpcmd && make build-all
+
+##################################### w48phpcmd_deb
+w48phpcmd_deb: w48phpcmd_bin
+	cd w48phpcmd && ./mkdeb.sh
+
+
+############################################################################
 ##################################### libupnp
 libupnp:
 	git clone https://github.com/Sven-Moennich/libupnp.git
 
+##################################### libupnp_bin
+libupnp_bin: libupnp
+	cd libupnp && ./configure && make && make install
+
+
+############################################################################
 ##################################### wiringpi
 wiringpi:
 	git clone https://github.com/Sven-Moennich/wiringpi.git
 
 
+############################################################################
 ##################################### w48d
 w48d:
 	git clone https://github.com/Sven-Moennich/w48d.git
 
+##################################### w48d_bin
+w48d_bin: w48d
+	cd w48d && make
 
+##################################### w48d_deb
+w48d_deb: w48d_bin
+	cd w48d && ./mkdeb.sh
+
+
+#############################################################################
 ###################################### w48-image-builder
 w48-image-builder:
 	git clone https://github.com/Sven-Moennich/w48-image-builder.git
 
 
+############################################################################
 ####################################### w48-WebGUI
 w48-WebGUI: 
 	git clone https://github.com/Sven-Moennich/w48-WebGUI.git
@@ -76,6 +149,8 @@ w48-WebGUI:
 w48-WebGUI_deb: w48-WebGUI
 	cd w48-WebGUI && ./mkdeb.sh && cp *.deb ../w48-image-builder/src/usr/src/
 
+
+###########################################################################
 ######################################## mkversion
 mkversion:
 	git clone https://github.com/Sven-Moennich/mkversion.git
@@ -86,6 +161,7 @@ mkversion_bin: mkversion
 mkversion_deb: mkversion_bin
 	cd mkversion && ./mkdeb.sh
 
+##########################################################################
 ######################################### mkpasswd
 
 mkpasswd:

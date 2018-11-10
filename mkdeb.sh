@@ -12,8 +12,12 @@ command -v mkversion >/dev/null 2>&1 || { echo >&2 "I require mkversion but it's
 
 # Release festlegen
 # 0 für Benutzer fragen
+if [ "x$1" == "x" ]; 
+then
 release_num=0
-
+else 
+release_num=$1
+fi
 RELEASE=( "" "major release" "minor release" "patch level" "build" )
 typeset -i i=1 max=${#RELEASE[*]}
 if [ "${release_num}" -lt 1 ]
