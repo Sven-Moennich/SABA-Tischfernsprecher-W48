@@ -42,7 +42,7 @@ w48conf_bin: w48conf
 
 ##################################### w48conf_deb
 w48conf_deb: w48conf_bin
-	cd w48conf && ./mkdeb.sh
+	cd w48conf && ./mkdeb.sh 4
 
 
 
@@ -58,7 +58,7 @@ w48play_bin: w48play
 
 ##################################### w48play_deb
 w48play_deb: w48play_bin
-	cd w48play && ./mkdeb.sh
+	cd w48play && ./mkdeb.sh 4
 
 
 
@@ -74,7 +74,7 @@ w48upnpd_bin: w48upnpd libupnp_bin
 
 ##################################### w48upnpd_deb
 w48upnpd_deb: w48upnpd_bin
-	cd w48upnpd && ./mkdeb.sh
+	cd w48upnpd && ./mkdeb.sh 4
 
 
 ###########################################################################
@@ -88,7 +88,7 @@ w48rebootd_bin: w48rebootd
 
 ##################################### w48rebootd_deb
 w48rebootd_deb: w48rebootd_bin
-	cd w48rebootd && ./mkdeb.sh
+	cd w48rebootd && ./mkdeb.sh 4
 
 
 ###########################################################################
@@ -98,11 +98,11 @@ w48phpcmd:
 
 ##################################### w48phpcmd_bin
 w48phpcmd_bin: w48phpcmd
-	cd w48phpcmd && make build-all
+	cd w48phpcmd && make
 
 ##################################### w48phpcmd_deb
 w48phpcmd_deb: w48phpcmd_bin
-	cd w48phpcmd && ./mkdeb.sh
+	cd w48phpcmd && ./mkdeb.sh 4
 
 
 ############################################################################
@@ -132,7 +132,7 @@ w48d_bin: w48d
 
 ##################################### w48d_deb
 w48d_deb: w48d_bin
-	cd w48d && ./mkdeb.sh
+	cd w48d && ./mkdeb.sh 4
 
 
 #############################################################################
@@ -147,7 +147,7 @@ w48-WebGUI:
 	git clone https://github.com/Sven-Moennich/w48-WebGUI.git
 
 w48-WebGUI_deb: w48-WebGUI
-	cd w48-WebGUI && ./mkdeb.sh && cp *.deb ../w48-image-builder/src/usr/src/
+	cd w48-WebGUI && ./mkdeb.sh 4 && cp *.deb ../w48-image-builder/src/usr/src/
 
 
 ###########################################################################
@@ -159,7 +159,7 @@ mkversion_bin: mkversion
 	cd mkversion && make && make install
 
 mkversion_deb: mkversion_bin
-	cd mkversion && ./mkdeb.sh
+	cd mkversion && ./mkdeb.sh 4
 
 ##########################################################################
 ######################################### mkpasswd
@@ -174,7 +174,7 @@ mkpasswd_bin_cross: cross mkpasswd
 	cd mkpasswd && make cross
 
 mkpasswd_deb: mkpasswd_bin
-	cd mkpasswd && ./mkdeb.sh
+	cd mkpasswd && ./mkdeb.sh 4
 
 mkpasswd_deb_cross: mkpasswd_bin_cross
-	cd mkpasswd && ./mkdeb.sh
+	cd mkpasswd && ./mkdeb.sh 4
