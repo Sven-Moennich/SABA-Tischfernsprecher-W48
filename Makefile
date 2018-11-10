@@ -1,4 +1,7 @@
-all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play mkpasswd_deb_cross
+all:
+	echo "Nichts zu tun"
+
+build-all: w48-image-builder w48-WebGUI_deb mkversion_bin mkpasswd_bin w48d wiringpi libupnp w48phpcmd w48rebootd w48upnpd w48play w48conf_deb
 	echo "Fertig"
 
 clean:
@@ -13,11 +16,22 @@ clean:
 	rm -rf  w48play
 	rm -rf  mkpasswd
 	rm -rf  wiringpi
+	rm -rf  gcc_all
+	rm -rf  w48conf
 
 
 ##################################### cross
 cross:
-	make.sh
+	./make.sh
+
+##################################### w48conf
+w48conf: 
+	git clone https://github.com/Sven-Moennich/w48conf.git
+
+##################################### w48conf_deb
+w48conf_deb: w48conf
+	cd w48conf && ./mkdeb.sh
+
 
 ##################################### w48play
 w48play: 
