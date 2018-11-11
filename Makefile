@@ -1,11 +1,9 @@
 all:
-	echo "run make build-all || make all-rpi"
+	echo "run make build-all || make download-all"
 
-build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp wiringpi w48phpcmd_bin_rpi
+build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi wiringpi w48phpcmd_bin_rpi libalsa_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
 	echo "Fertig"
 
-all-rpi: w48-image-builder mkpasswd_deb w48d_deb w48phpcmd_deb w48rebootd_deb w48upnpd_deb w48play_deb w48conf_deb
-	echo "Fertig"
 
 download-all: w48conf w48play w48upnpd w48rebootd w48phpcmd libupnp wiringpi w48d w48-image-builder w48-WebGUI mkversion mkpasswd lib-alsa
 
@@ -30,7 +28,7 @@ clean:
 ##################################### cross
 cross:
 	./make.sh
-
+	touch cross
 
 
 #######################################################################
@@ -40,6 +38,10 @@ w48conf:
 
 ##################################### w48conf_bin
 w48conf_bin: w48conf
+	cd w48conf && make
+
+##################################### w48conf_bin
+w48conf_bin_rpi: w48conf
 	cd w48conf && make
 
 ##################################### w48conf_deb
@@ -54,7 +56,7 @@ lib-alsa:
 	git clone https://github.com/Sven-Moennich/lib-alsa.git
 
 ##################################### lib-alsa_bin
-lib-alsa_bin: lib-alsa
+lib-alsa_bin_rpi: lib-alsa cross
 	cd lib-alsa && \
 ./configure -prefix=/opt/libalsa  \
 --host=arm-linux-gnueabihf  \
@@ -65,7 +67,7 @@ LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ \
 LIBS="-lc" && make && make install
 
 ##################################### lib-alsa_deb
-lib-alsa_deb: lib-alsa_bin
+lib-alsa_deb: lib-alsa_bin_rpi
 	cd lib-alsa && ./mkdeb.sh 4
 
 
@@ -79,6 +81,10 @@ w48play:
 w48play_bin: w48play
 	cd w48play && make
 
+##################################### w48play_bin
+w48play_bin_rpi: w48play libalsa_bin_rpi
+	cd w48play && make build-rpi
+
 ##################################### w48play_deb
 w48play_deb: w48play_bin
 	cd w48play && ./mkdeb.sh 4
@@ -90,10 +96,13 @@ w48play_deb: w48play_bin
 w48upnpd:
 	git clone https://github.com/Sven-Moennich/w48upnpd.git
 
-
 ##################################### w48upnpd_bin
 w48upnpd_bin: w48upnpd libupnp_bin 
 	cd w48upnpd && make
+
+##################################### w48upnpd_bin
+w48upnpd_bin_rpi: w48upnpd libupnp_bin_rpi
+	cd w48upnpd && make build-rpi
 
 ##################################### w48upnpd_deb
 w48upnpd_deb: w48upnpd_bin
@@ -108,6 +117,10 @@ w48rebootd:
 ##################################### w48rebootd_bin
 w48rebootd_bin: w48rebootd
 	cd w48rebootd && make
+
+##################################### w48rebootd_bin
+w48rebootd_bin_rpi: w48rebootd
+	cd w48rebootd && make build-rpi
 
 ##################################### w48rebootd_deb
 w48rebootd_deb: w48rebootd_bin
@@ -141,6 +154,17 @@ libupnp:
 libupnp_bin: libupnp
 	cd libupnp && ./configure && make && make install
 
+##################################### libupnp_bin_rpi
+libupnp_bin_rpi: libupnp cross
+	cd libupnp && \
+./configure -prefix=/opt/libupnp  \
+--host=arm-linux-gnueabihf  \
+CC=arm-linux-gnueabihf-gcc \
+CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" \
+LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ \
+-L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" \
+LIBS="-lc"  && make && make install
+
 
 ############################################################################
 ##################################### wiringpi
@@ -156,6 +180,10 @@ w48d:
 ##################################### w48d_bin
 w48d_bin: w48d
 	cd w48d && make
+
+##################################### w48d_bin
+w48d_bin_rpi: w48d cross
+	cd w48d && make build-rpi
 
 ##################################### w48d_deb
 w48d_deb: w48d_bin
@@ -185,6 +213,9 @@ mkversion:
 mkversion_bin: mkversion
 	cd mkversion && make && make install
 
+mkversion_bin_rpi: mkversion cross
+	cd mkversion && make build-rpi && make install-rpi
+
 mkversion_deb: mkversion_bin
 	cd mkversion && ./mkdeb.sh 4
 
@@ -197,11 +228,9 @@ mkpasswd:
 mkpasswd_bin: mkpasswd
 	cd mkpasswd && make && make install
 
-mkpasswd_bin_cross: cross mkpasswd
-	cd mkpasswd && make cross
+mkpasswd_bin_rpi: cross mkpasswd
+	cd mkpasswd && make build-rpi
 
 mkpasswd_deb: mkpasswd_bin
 	cd mkpasswd && ./mkdeb.sh 4
 
-mkpasswd_deb_cross: mkpasswd_bin_cross
-	cd mkpasswd && ./mkdeb.sh 4
