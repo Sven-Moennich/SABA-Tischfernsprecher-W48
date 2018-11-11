@@ -138,8 +138,8 @@ cd build-gcc8
 ################################3
 echo "At this point, you can use GCC 8.1 to cross compile any C, C++ or Fortran code for your Raspberry Pi."
 echo "In order to stress test our cross compiler, let’s use it to cross compile itself for the Pi:"
-mkdir -p /opt/gcc-8.1.0
-chown $USER /opt/gcc-8.1.0
+#mkdir -p /opt/gcc-8.1.0
+#chown $USER /opt/gcc-8.1.0
 cd ..
 
 #mkdir build-native-gcc8 
@@ -164,15 +164,18 @@ cd /opt
 cd $CDIR
 
 ###################################
-echo "build libupnp"
-make libupnp
-cd libupnp
-./configure -prefix=/opt/libupnp  --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc" 
-make
-make install
+#echo "build libupnp"
+#make libupnp
+#cd libupnp
+#./configure -prefix=/opt/libupnp  --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc" 
+#make
+#make install
 
-cp -r /opt/libupnp/include w48-image-builder/src/usr/local/include/
-cp -r /opt/libupnp/lib/* w48-image-builder/src/usr/local/lib/
+#mkdir -p w48-image-builder/src/usr/local/include/
+#mkdir -p w48-image-builder/src/usr/local/lib/
+
+#cp -r /opt/libupnp/include w48-image-builder/src/usr/local/include/
+#cp -r /opt/libupnp/lib/* w48-image-builder/src/usr/local/lib/
 
 
 

@@ -1,7 +1,24 @@
 all:
-	echo "run make build-all || make download-all"
+	@echo "run make build-all         || make build-all_rpi  || make download-all"
+	@echo "run make mkversion         || make mkversion_bin  || make mkversion_bin_rpi"
+	@echo "run make w48-image-builder "
+	@echo "run make w48-WebGUI        || make w48-WebGUI_deb"
+	@echo "run make libupnp           || make libupnp_bin    || make libupnp_bin_rpi"
+	@echo "run make lib-alsa          || make lib-alsa_bin   || make lib-alsa_bin_rpi"
+	@echo "run make wiringpi"
+	@echo "run make w48phpcmd         || make w48phpcmd_bin  || make w48phpcmd_bin_rpi  || make w48phpcmd_deb  || make w48phpcmd_deb_rpi"
+	@echo "run make w48conf           || make w48conf_bin    || make w48conf_bin_rpi    || make w48conf_deb    || make w48conf_deb_rpi"
+	@echo "run make w48play           || make w48play_bin    || make w48play_bin_rpi    || make w48play_deb    || make w48play_deb_rpi"
+	@echo "run make w48upnpd          || make w48upnpd_bin   || make w48upnpd_bin_rpi   || make w48upnpd_deb   || make w48upnpd_deb_rpi"
+	@echo "run make w48rebootd        || make w48rebootd_bin || make w48rebootd_bin_rpi || make w48rebootd_deb || make w48rebootd_deb_rpi"
+	@echo "run make w48d              || make w48d_bin       || make w48d_bin_rpi       || make w48d_deb       || make w48d_deb_rpi"
+	@echo "run make cross             || make cross_tar"
+	@echo "run make clean"
 
-build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi wiringpi w48phpcmd_bin_rpi libalsa_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
+build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
+	echo "Fertig"
+
+build-all_rpi: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
 	echo "Fertig"
 
 
@@ -23,6 +40,7 @@ clean:
 	rm -rf  w48conf
 	rm -f *.deb
 	rm -rf  lib-alsa
+	rm -f  cross
 
 
 ##################################### cross
@@ -56,15 +74,17 @@ lib-alsa:
 	git clone https://github.com/Sven-Moennich/lib-alsa.git
 
 ##################################### lib-alsa_bin
-lib-alsa_bin_rpi: lib-alsa cross
-	cd lib-alsa && \
-./configure -prefix=/opt/libalsa  \
---host=arm-linux-gnueabihf  \
-CC=arm-linux-gnueabihf-gcc \
-CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" \
-LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ \
--L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" \
-LIBS="-lc" && make && make install
+lib-alsa_bin_rpi: w48-image-builder lib-alsa cross
+	cd lib-alsa && clean
+	cd lib-alsa && ./configure -prefix=/opt/cross-pi-libs  --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc"
+	cd lib-alsa && make 
+	cd lib-alsa && make install
+	mkdir -p w48-image-builder/src/usr/local/include/
+	mkdir -p w48-image-builder/src/usr/local/lib/
+	cp -r /opt/cross-pi-libs/include/* w48-image-builder/src/usr/local/include/
+	cp -r /opt/cross-pi-libs/lib/* w48-image-builder/src/usr/local/lib/
+
+
 
 ##################################### lib-alsa_deb
 lib-alsa_deb: lib-alsa_bin_rpi
@@ -82,7 +102,7 @@ w48play_bin: w48play
 	cd w48play && make
 
 ##################################### w48play_bin
-w48play_bin_rpi: w48play libalsa_bin_rpi
+w48play_bin_rpi: w48play lib-alsa_bin_rpi
 	cd w48play && make build-rpi
 
 ##################################### w48play_deb
@@ -155,15 +175,15 @@ libupnp_bin: libupnp
 	cd libupnp && ./configure && make && make install
 
 ##################################### libupnp_bin_rpi
-libupnp_bin_rpi: libupnp cross
-	cd libupnp && \
-./configure -prefix=/opt/libupnp  \
---host=arm-linux-gnueabihf  \
-CC=arm-linux-gnueabihf-gcc \
-CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" \
-LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ \
--L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" \
-LIBS="-lc"  && make && make install
+libupnp_bin_rpi: libupnp w48-image-builder cross
+	cd libupnp && make clean
+	cd libupnp && ./configure -prefix=/opt/cross-pi-libs --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc"
+	cd libupnp && make
+	cd libupnp && make install
+	mkdir -p w48-image-builder/src/usr/local/include/
+	mkdir -p w48-image-builder/src/usr/local/lib/
+	cp -r /opt/cross-pi-libs/include/* w48-image-builder/src/usr/local/include/
+	cp -r /opt/cross-pi-libs/lib/* w48-image-builder/src/usr/local/lib/
 
 
 ############################################################################
