@@ -127,12 +127,12 @@ cp -r /opt/cross-pi-gcc /opt/cross-pi-gcc-6.3.0
 
 ####################################
 echo "Next, we are going to use the above built Glibc to build a more modern cross compiler that will overwrite 6.3:"
-#cd ..
 mkdir build-gcc8 
 cd build-gcc8
-../gcc-8.1.0/configure --prefix=/opt/cross-pi-gcc --target=arm-linux-gnueabihf --enable-languages=c,c++,fortran --with-arch=armv6 --with-fpu=vfp --with-float=hard --disable-multilib
-make -j8
-make install
+#../gcc-8.1.0/configure --prefix=/opt/cross-pi-gcc --target=arm-linux-gnueabihf --enable-languages=c,c++,fortran --with-arch=armv6 --with-fpu=vfp --with-float=hard --disable-multilib
+#../gcc-8.1.0/configure --prefix=/opt/cross-pi-gcc --target=arm-linux-gnueabihf --enable-languages=c,c++ --with-arch=armv6 --with-fpu=vfp --with-float=hard --disable-multilib
+#make -j8
+#make install
 
 
 ################################3
@@ -160,6 +160,19 @@ echo "You can now, optionally, safely erase the build folder."
 cd $CDIR
 #rm -rf gcc_all
 cd /opt
-tar -cjvf $CDIR/gcc-8.1.0.tar.bz2 gcc-8.1.0
+#tar -cjvf $CDIR/gcc-8.1.0.tar.bz2 gcc-8.1.0
 cd $CDIR
+
+###################################
+echo "build libupnp"
+make libupnp
+cd libupnp
+./configure -prefix=/opt/libupnp  --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc" 
+make
+make install
+
+cp -r /opt/libupnp/include w48-image-builder/src/usr/local/include/
+cp -r /opt/libupnp/lib/* w48-image-builder/src/usr/local/lib/
+
+
 
