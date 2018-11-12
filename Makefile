@@ -40,13 +40,15 @@ clean:
 	rm -rf  w48conf
 	rm -f *.deb
 	rm -rf  lib-alsa
-	rm -f  cross
-
+	rm -rf  cross
+	rm -rf /opt/cross-pi-gcc
+	rm -rf /opt/cross-pi-gcc-6.3.0
+	rm -rf /opt/cross-pi-libs
+#	rm -rf /opt/gcc-8.1.0
 
 ##################################### cross
 cross:
 	./make.sh
-	touch cross
 
 
 #######################################################################
@@ -75,7 +77,6 @@ lib-alsa:
 
 ##################################### lib-alsa_bin
 lib-alsa_bin_rpi: w48-image-builder lib-alsa cross
-	cd lib-alsa && clean
 	cd lib-alsa && ./configure -prefix=/opt/cross-pi-libs  --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc"
 	cd lib-alsa && make 
 	cd lib-alsa && make install
@@ -176,7 +177,6 @@ libupnp_bin: libupnp
 
 ##################################### libupnp_bin_rpi
 libupnp_bin_rpi: libupnp w48-image-builder cross
-	cd libupnp && make clean
 	cd libupnp && ./configure -prefix=/opt/cross-pi-libs --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc"
 	cd libupnp && make
 	cd libupnp && make install
@@ -198,16 +198,21 @@ w48d:
 	git clone https://github.com/Sven-Moennich/w48d.git
 
 ##################################### w48d_bin
-w48d_bin: w48d
+w48d_bin: w48d wiringpi
 	cd w48d && make
 
-##################################### w48d_bin
-w48d_bin_rpi: w48d cross
+##################################### w48d_bin_rpi
+w48d_bin_rpi: w48d wiringpi cross
 	cd w48d && make build-rpi
 
 ##################################### w48d_deb
 w48d_deb: w48d_bin
 	cd w48d && ./mkdeb.sh 4
+
+##################################### w48d_deb_rpi
+w48d_deb_rpi: w48d_bin_rpi
+	cd w48d && ./mkdeb.sh 4
+
 
 
 #############################################################################
