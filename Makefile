@@ -90,99 +90,107 @@ lib-alsa_bin_rpi: w48-image-builder lib-alsa cross
 ##################################### lib-alsa_deb
 lib-alsa_deb: lib-alsa_bin_rpi
 	cd lib-alsa && ./mkdeb.sh 4
-
+	touch 
 
 
 #####################################################################
 ##################################### w48play
 w48play: 
 	git clone https://github.com/Sven-Moennich/w48play.git
+	touch w48play
 
 ##################################### w48play_bin
 w48play_bin: w48play
 	cd w48play && make
+	touch w48play_bin
 
 ##################################### w48play_bin
 w48play_bin_rpi: w48play lib-alsa_bin_rpi
 	cd w48play && make build-rpi
+	touch w48play_bin_rpi
 
 ##################################### w48play_deb
 w48play_deb: w48play_bin
 	cd w48play && ./mkdeb.sh 4
+	touch w48play_deb
 
 ##################################### w48play_deb_rpi
 w48play_deb_rpi: w48play_bin_rpi
 	cd w48play && ./mkdeb.sh 4
-
+	touch w48play_deb_rpi
 
 
 ########################################################################
 ##################################### w48upnpd
 w48upnpd:
 	git clone https://github.com/Sven-Moennich/w48upnpd.git
+	touch w48upnpd
 
 ##################################### w48upnpd_bin
 w48upnpd_bin: w48upnpd libupnp_bin 
 	cd w48upnpd && make
+	touch w48upnpd_bin
 
 ##################################### w48upnpd_bin
 w48upnpd_bin_rpi: w48upnpd libupnp_bin_rpi
 	cd w48upnpd && make build-rpi
+	touch w48upnpd_bin_rpi
 
 ##################################### w48upnpd_deb
 w48upnpd_deb: w48upnpd_bin
 	cd w48upnpd && ./mkdeb.sh 4
+	touch w48upnpd_deb
 
 ##################################### w48upnpd_deb_rpi
 w48upnpd_deb_rpi: w48upnpd_bin_rpi
 	cd w48upnpd && ./mkdeb.sh 4
-
+	touch w48upnpd_deb_rpi
 
 ###########################################################################
 ##################################### w48rebootd
 w48rebootd:
 	git clone https://github.com/Sven-Moennich/w48rebootd.git
-
+	touch w48rebootd
 ##################################### w48rebootd_bin
 w48rebootd_bin: w48rebootd
 	cd w48rebootd && make
-
+	touch w48rebootd_bin
 ##################################### w48rebootd_bin
 w48rebootd_bin_rpi: w48rebootd
 	cd w48rebootd && make build-rpi
-
+	touch w48rebootd_bin_rpi
 ##################################### w48rebootd_deb
 w48rebootd_deb: w48rebootd_bin
 	cd w48rebootd && ./mkdeb.sh 4
-
+	touch w48rebootd_deb
 
 ###########################################################################
 ##################################### w48phpcmd
 w48phpcmd:
 	git clone https://github.com/Sven-Moennich/w48phpcmd.git
-
+	touch w48phpcmd
 ##################################### w48phpcmd_bin
 w48phpcmd_bin: w48phpcmd
 	cd w48phpcmd && make
-
+	touch w48phpcmd_bin
 ##################################### w48phpcmd_bin
 w48phpcmd_bin_rpi: w48phpcmd cross
 	cd w48phpcmd && make build-rpi
-
+	touch w48phpcmd_bin_rpi
 ##################################### w48phpcmd_deb
 w48phpcmd_deb: w48phpcmd_bin
 	cd w48phpcmd && ./mkdeb.sh 4
-
+	touch w48phpcmd_deb
 
 ############################################################################
 ##################################### libupnp
 libupnp:
 	git clone https://github.com/Sven-Moennich/libupnp.git
-
+	touch libupnpd
 ##################################### libupnp_bin
 libupnp_bin: libupnp
 	cd libupnp && ./configure && make && make install
-
+	touch libupnpd_bin
 ##################################### libupnp_bin_rpi
 libupnp_bin_rpi: libupnp w48-image-builder cross
 	cd libupnp && ./configure -prefix=/opt/cross-pi-libs --host=arm-linux-gnueabihf  CC=arm-linux-gnueabihf-gcc CPPFLAGS="-I/opt/cross-pi-gcc/arm-linux-gnueabihf/include/" LDFLAGS="-Wl,-rpath-link=/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/ -L/opt/cross-pi-gcc/arm-linux-gnueabihf/lib/" LIBS="-lc"
@@ -192,85 +200,93 @@ libupnp_bin_rpi: libupnp w48-image-builder cross
 	mkdir -p w48-image-builder/src/usr/local/lib/
 	cp -r /opt/cross-pi-libs/include/* w48-image-builder/src/usr/local/include/
 	cp -r /opt/cross-pi-libs/lib/* w48-image-builder/src/usr/local/lib/
-
+	touch libupnpd_bin_rpi
 
 ############################################################################
 ##################################### wiringpi
 wiringpi:
 	git clone https://github.com/Sven-Moennich/wiringpi.git
-
+	touch wiringpi
 ##################################### wiringpi_bin
 wiringpi_bin: wiringpi
 	cd wiringpi && ./build
-
+	touch wiringpi_bin
 ##################################### wiringpi_bin
 wiringpi_bin_rpi: wiringpi
 	cd wiringpi && ./build
-
+	touch wiringpi_bin_rpi
 ############################################################################
 ##################################### w48d
 w48d:
 	git clone https://github.com/Sven-Moennich/w48d.git
-
+	touch w48d
 ##################################### w48d_bin
 w48d_bin: w48d wiringpi_bin
 	cd w48d && make
-
+	touch w48d_bin
 ##################################### w48d_bin_rpi
 w48d_bin_rpi: w48d wiringpi_bin cross
 	cd w48d && make build-rpi
-
+	touch w48d_bin_rpi
 ##################################### w48d_deb
 w48d_deb: w48d_bin
 	cd w48d && ./mkdeb.sh 4
-
+	touch w48d_deb
 ##################################### w48d_deb_rpi
 w48d_deb_rpi: w48d_bin_rpi
 	cd w48d && ./mkdeb.sh 4
-
+	touch w48d_deb_rpi
 
 
 #############################################################################
 ###################################### w48-image-builder
 w48-image-builder:
 	git clone https://github.com/Sven-Moennich/w48-image-builder.git
-
+	touch w48-image-builder
 
 ############################################################################
 ####################################### w48-WebGUI
 w48-WebGUI: 
 	git clone https://github.com/Sven-Moennich/w48-WebGUI.git
+	touch w48-WebGUI
 
 w48-WebGUI_deb: w48-WebGUI
 	cd w48-WebGUI && ./mkdeb.sh 4 && cp *.deb ../w48-image-builder/src/usr/src/
-
+	touch w48-WebGUI_deb
 
 ###########################################################################
 ######################################## mkversion
 mkversion:
 	git clone https://github.com/Sven-Moennich/mkversion.git
+	touch mkversion
 
 mkversion_bin: mkversion
 	cd mkversion && make && make install
+	touch mkversion_bin
 
 mkversion_bin_rpi: mkversion cross
 	cd mkversion && make build-rpi && make install-rpi
+	touch mkversion_bin_rpi
 
 mkversion_deb: mkversion_bin
 	cd mkversion && ./mkdeb.sh 4
+	touch mkversion_deb
 
 ##########################################################################
 ######################################### mkpasswd
 
 mkpasswd:
 	git clone https://github.com/Sven-Moennich/mkpasswd.git
+	touch mkpasswd
 
 mkpasswd_bin: mkpasswd
 	cd mkpasswd && make && make install
+	touch mkpasswd_bin
 
 mkpasswd_bin_rpi: cross mkpasswd
 	cd mkpasswd && make build-rpi
+	touch mkpasswd_bin_rpi
 
 mkpasswd_deb: mkpasswd_bin
 	cd mkpasswd && ./mkdeb.sh 4
-
+	touch mkpasswd_deb
