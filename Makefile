@@ -5,7 +5,7 @@ all:
 	@echo "run make w48-WebGUI        || make w48-WebGUI_deb"
 	@echo "run make libupnp           || make libupnp_bin    || make libupnp_bin_rpi"
 	@echo "run make lib-alsa          || make lib-alsa_bin   || make lib-alsa_bin_rpi"
-	@echo "run make wiringpi"
+	@echo "run make wiringpi          || make wiringpi_bin   || make wiringpi_bin_rpi"
 	@echo "run make w48phpcmd         || make w48phpcmd_bin  || make w48phpcmd_bin_rpi  || make w48phpcmd_deb  || make w48phpcmd_deb_rpi"
 	@echo "run make w48conf           || make w48conf_bin    || make w48conf_bin_rpi    || make w48conf_deb    || make w48conf_deb_rpi"
 	@echo "run make w48play           || make w48play_bin    || make w48play_bin_rpi    || make w48play_deb    || make w48play_deb_rpi"
@@ -15,10 +15,10 @@ all:
 	@echo "run make cross             || make cross_tar"
 	@echo "run make clean"
 
-build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
+build-all: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi_bin_rpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_deb_rpi w48upnpd_bin_rpi_deb w48rebootd_bin_rpi w48d_deb_rpi
 	echo "Fertig"
 
-build-all_rpi: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
+build-all_rpi: mkversion_bin w48-image-builder w48-WebGUI_deb libupnp_bin_rpi lib-alsa_bin_rpi wiringpi_bin_rpi w48phpcmd_bin_rpi w48conf_bin_rpi w48play_bin_rpi w48upnpd_bin_rpi w48rebootd_bin_rpi w48d_bin_rpi
 	echo "Fertig"
 
 
@@ -110,6 +110,10 @@ w48play_bin_rpi: w48play lib-alsa_bin_rpi
 w48play_deb: w48play_bin
 	cd w48play && ./mkdeb.sh 4
 
+##################################### w48play_deb_rpi
+w48play_deb_rpi: w48play_bin_rpi
+	cd w48play && ./mkdeb.sh 4
+
 
 
 ########################################################################
@@ -127,6 +131,10 @@ w48upnpd_bin_rpi: w48upnpd libupnp_bin_rpi
 
 ##################################### w48upnpd_deb
 w48upnpd_deb: w48upnpd_bin
+	cd w48upnpd && ./mkdeb.sh 4
+
+##################################### w48upnpd_deb_rpi
+w48upnpd_deb_rpi: w48upnpd_bin_rpi
 	cd w48upnpd && ./mkdeb.sh 4
 
 
@@ -191,6 +199,13 @@ libupnp_bin_rpi: libupnp w48-image-builder cross
 wiringpi:
 	git clone https://github.com/Sven-Moennich/wiringpi.git
 
+##################################### wiringpi_bin
+wiringpi_bin: wiringpi
+	cd wiringpi && ./build
+
+##################################### wiringpi_bin
+wiringpi_bin_rpi: wiringpi
+	cd wiringpi && ./build
 
 ############################################################################
 ##################################### w48d
@@ -198,11 +213,11 @@ w48d:
 	git clone https://github.com/Sven-Moennich/w48d.git
 
 ##################################### w48d_bin
-w48d_bin: w48d wiringpi
+w48d_bin: w48d wiringpi_bin
 	cd w48d && make
 
 ##################################### w48d_bin_rpi
-w48d_bin_rpi: w48d wiringpi cross
+w48d_bin_rpi: w48d wiringpi_bin cross
 	cd w48d && make build-rpi
 
 ##################################### w48d_deb
